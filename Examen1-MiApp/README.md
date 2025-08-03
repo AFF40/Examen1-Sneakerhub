@@ -4,7 +4,7 @@ Este proyecto fue desarrollado en Laravel para la empresa X. Permite gestionar p
 
 ## Requisitos
 
-- PHP >= 8.1
+- PHP >= 8.2
 - Composer
 - PostgreSQL / MySQL
 - Node.js y npm (para assets)
