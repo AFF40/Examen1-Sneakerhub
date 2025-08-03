@@ -3,43 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Marca;
 
 class MarcaController extends Controller
 {
-    //
     public function index()
     {
-        // Lógica para listar marcas
-        return response()->json(['message' => 'Listando marcas']);
+        return response()->json(
+            Marca::all()
+        );
     }
-
-    public function show($id)
-    {
-        $request->validate([
-            'nombre' => 'required',
-            'descripcion' => 'nullable',
-        ]);
-        $marca = Marca::create($request->all());
-
-        return response()->json([
-            'mensage' => 'Marca creada exitosamente',
-            'marca' => $marca
-        ], 201);
-    }
-    public function productosPorMarca(Marca $marca)
-{
-    return response()->json($marca->productos);
-}
-
-    
 
     public function store(Request $request)
     {
-        // Lógica para almacenar una nueva marca
         $request->validate([
-            'nombre' => 'required',
-            'descripcion' => 'nullable',
+            'nombre' => 'required|string|max:255',
+            'pais_origen' => 'nullable|string|max:255',
         ]);
+
         $marca = Marca::create($request->all());
 
         return response()->json([
@@ -48,10 +29,18 @@ class MarcaController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    public function show(Marca $marca)
     {
-        // Lógica para actualizar una marca
-        $marca = Marca::findOrFail($id);
+        return response()->json($marca);
+    }
+
+    public function update(Request $request, Marca $marca)
+    {
+        $request->validate([
+            'nombre' => 'sometimes|string|max:255',
+            'pais_origen' => 'nullable|string|max:255',
+        ]);
+
         $marca->update($request->all());
 
         return response()->json([
@@ -60,14 +49,17 @@ class MarcaController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(Marca $marca)
     {
-        // Lógica para eliminar una marca
-        $marca = Marca::findOrFail($id);
         $marca->delete();
 
-        return response()->json(['message' => 'Marca eliminada exitosamente']);
+        return response()->json([
+            'message' => 'Marca eliminada exitosamente'
+        ], 204);
     }
 
-    
+    public function productosPorMarca(Marca $marca)
+    {
+        return response()->json($marca->productos);
+    }
 }

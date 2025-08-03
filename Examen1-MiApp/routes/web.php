@@ -19,6 +19,11 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register'); // Añade esto para nombrar la ruta
 
+// Ruta para la tienda (página principal después del login)
+Route::get('/tienda', function () {
+    return view('tienda');
+})->name('tienda');
+
 // Rutas protegidas
 Route::middleware(['web'])->group(function () {
     Route::get('/dashboard', function () {

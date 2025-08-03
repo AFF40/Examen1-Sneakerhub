@@ -32,7 +32,7 @@ class AuthController extends Controller
     return response()->json([
         'access_token' => $token,
         'token_type' => 'Bearer',
-        'redirect_to' => '/dashboard', // Añade esta línea clave
+        'redirect_to' => '/tienda', // Cambiado a tienda
         'user' => [
             'id' => $user->id,
             'name' => $user->name,

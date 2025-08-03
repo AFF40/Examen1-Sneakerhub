@@ -4,22 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Producto;
 
 class ProductoController extends Controller
 {
     public function store(Request $request)
-{
-    $request->validate([
-        'nombre' => 'required|string',
-        'precio' => 'required|numeric',
-        'marca_id' => 'required|exists:marcas,id',
-        'categoria_id' => 'required|exists:categorias,id'
-    ]);
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'precio' => 'required|numeric|min:0',
+            'stock' => 'nullable|integer|min:0',
+            'marca_id' => 'required|exists:marcas,id',
+            'categoria_id' => 'required|exists:categorias,id',
+            'imagen_url' => 'nullable|url'
+        ]);
 
-    $producto = Producto::create($request->all());
+        $producto = Producto::create($request->all());
+        
+        // Cargar las relaciones antes de devolver
+        $producto->load(['marca', 'categoria']);
 
-    return response()->json($producto, 201);
-}
+        return response()->json($producto, 201);
+    }
 
 public function show(Producto $producto)
 {
@@ -71,7 +78,7 @@ public function buscar(Request $request)
 public function index()
 {
     return response()->json(
-        Producto::with(['marca', 'categoria'])->paginate(10)
+        Producto::with(['marca', 'categoria'])->get()
     );
 }
 
