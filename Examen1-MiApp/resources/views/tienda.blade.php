@@ -199,6 +199,38 @@
             position: relative;
         }
 
+        .producto-delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .producto:hover .producto-delete-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .producto-delete-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5);
+        }
+
         .producto:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
@@ -395,6 +427,125 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
+        }
+
+        /* Modal de Confirmación */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .confirm-modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            animation: confirmModalSlideIn 0.3s ease;
+        }
+
+        @keyframes confirmModalSlideIn {
+            from {
+                transform: translateY(-30px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .confirm-modal-header {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .confirm-modal-header i {
+            font-size: 24px;
+        }
+
+        .confirm-modal-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .confirm-modal-body {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .confirm-modal-body p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .confirm-modal-body .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .confirm-modal-footer {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-cancel:hover {
+            background: #545b62;
+            transform: translateY(-2px);
         }
 
         /* Modal Styles */
@@ -847,6 +998,31 @@
         <p>&copy; 2025 SneakerHub. Todos los derechos reservados. | Diseñado con <i class="fas fa-heart" style="color: #e74c3c;"></i></p>
     </footer>
 
+    <!-- Modal de Confirmación de Eliminación -->
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Confirmar Eliminación</h3>
+            </div>
+            <div class="confirm-modal-body">
+                <p>¿Estás seguro de que quieres eliminar este producto?</p>
+                <p class="product-name" id="productNameToDelete">Nombre del producto</p>
+                <p style="color: #e74c3c; font-size: 14px; margin-top: 15px;">
+                    <i class="fas fa-warning"></i> Esta acción no se puede deshacer
+                </p>
+            </div>
+            <div class="confirm-modal-footer">
+                <button class="btn-cancel" onclick="closeConfirmModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn-confirm" onclick="confirmarEliminacion()">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function cargarProductos() {
             document.getElementById('loading').style.display = 'block';
@@ -888,6 +1064,9 @@
                         
                         html += `
                             <div class="producto" style="animation-delay: ${index * 0.1}s">
+                                <button class="producto-delete-btn" onclick="mostrarConfirmacionEliminacion(${producto.id}, '${producto.nombre.replace(/'/g, "\\'")}')">
+                                    <i class="fas fa-times"></i>
+                                </button>
                                 ${imagenHtml}
                                 ${placeholderHtml}
                                 <div class="producto-info">
@@ -1431,13 +1610,39 @@
 
         // Funciones de edición y eliminación (placeholder)
         function editarMarca(id) {
-            alert('Función de editar marca en desarrollo. ID: ' + id);
+            // Mostrar mensaje temporal en lugar de alert
+            const btn = event.target;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-cog fa-spin"></i>';
+            btn.style.background = 'linear-gradient(45deg, #f39c12, #e67e22)';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = 'linear-gradient(45deg, #f39c12, #e67e22)';
+            }, 2000);
+            
+            console.log('Función de editar marca en desarrollo. ID:', id);
         }
 
         function eliminarMarca(id) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta marca?')) {
-                alert('Función de eliminar marca en desarrollo. ID: ' + id);
-            }
+            // Crear confirmación elegante en lugar de confirm()
+            const btn = event.target;
+            const originalHTML = btn.innerHTML;
+            const originalBg = btn.style.background;
+            
+            btn.innerHTML = '<i class="fas fa-question"></i>';
+            btn.style.background = 'linear-gradient(45deg, #f39c12, #e67e22)';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-cog fa-spin"></i>';
+                btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = originalBg;
+                    console.log('Función de eliminar marca en desarrollo. ID:', id);
+                }, 1500);
+            }, 1000);
         }
 
         function editarCategoria(id) {
@@ -1505,6 +1710,85 @@
                 }
             }, 3000);
         }
+
+        // Variables globales para eliminación
+        let productoAEliminar = null;
+
+        // Función para mostrar confirmación de eliminación
+        function mostrarConfirmacionEliminacion(productoId, productoNombre) {
+            productoAEliminar = productoId;
+            document.getElementById('productNameToDelete').textContent = productoNombre;
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+        // Función para cerrar modal de confirmación
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            productoAEliminar = null;
+        }
+
+        // Función para confirmar eliminación
+        function confirmarEliminacion() {
+            if (!productoAEliminar) return;
+            
+            const token = localStorage.getItem('auth_token');
+            const confirmBtn = document.querySelector('.btn-confirm');
+            const originalText = confirmBtn.innerHTML;
+            
+            // Mostrar estado de carga
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            confirmBtn.disabled = true;
+            
+            fetch(`/api/productos/${productoAEliminar}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Mostrar éxito
+                confirmBtn.innerHTML = '<i class="fas fa-check"></i> ¡Eliminado!';
+                confirmBtn.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+                
+                setTimeout(() => {
+                    closeConfirmModal();
+                    cargarProductos(); // Recargar productos
+                    
+                    // Restaurar botón
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    confirmBtn.disabled = false;
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Mostrar error
+                confirmBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                confirmBtn.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a24)';
+                
+                setTimeout(() => {
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    confirmBtn.disabled = false;
+                }, 3000);
+            });
+        }
+
+        // Cerrar modal de confirmación al hacer click fuera
+        window.addEventListener('click', function(event) {
+            const confirmModal = document.getElementById('confirmModal');
+            if (event.target === confirmModal) {
+                closeConfirmModal();
+            }
+        });
     </script>
 </body>
 </html>
