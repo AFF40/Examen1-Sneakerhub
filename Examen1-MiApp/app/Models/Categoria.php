@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model
 {
-    //
+    // app/Models/Categoria.php
+public function productos()
+{
+    return $this->hasMany(Producto::class);
+}
+
 }
