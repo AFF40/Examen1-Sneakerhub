@@ -610,6 +610,43 @@
             z-index: 10;
         }
 
+        .form-error {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            animation: slideInError 0.3s ease;
+        }
+
+        @keyframes slideInError {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .form-success {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            animation: slideInError 0.3s ease;
+        }
+
         /* Animaciones de entrada */
         .producto {
             opacity: 0;
@@ -1180,6 +1217,13 @@
                 if (value.trim()) data[key] = value;
             });
 
+            const btn = form.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            
+            // Mostrar estado de carga
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            btn.disabled = true;
+
             fetch('/api/marcas', {
                 method: 'POST',
                 headers: {
@@ -1191,17 +1235,51 @@
             .then(response => response.json())
             .then(result => {
                 if (result.marca || result.id) {
-                    alert('Marca creada exitosamente');
-                    form.reset();
-                    cargarTablaMarcas();
-                    cargarMarcas(); // Actualizar cache
+                    // Mostrar éxito
+                    btn.innerHTML = '<i class="fas fa-check"></i> ¡Guardado!';
+                    btn.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+                    
+                    setTimeout(() => {
+                        form.reset();
+                        cargarTablaMarcas();
+                        cargarMarcas(); // Actualizar cache
+                        
+                        // Restaurar botón y cerrar modal
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                        btn.disabled = false;
+                        closeModal('marca');
+                    }, 1500);
                 } else {
-                    alert('Error al crear marca: ' + (result.message || 'Error desconocido'));
+                    // Mostrar error
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                    btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    
+                    // Mostrar mensaje de error en el formulario
+                    showFormError('formMarca', result.message || 'Error al crear marca');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                        btn.disabled = false;
+                    }, 3000);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al crear marca');
+                
+                // Mostrar error
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                
+                // Mostrar mensaje de error en el formulario
+                showFormError('formMarca', 'Error de conexión al servidor');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    btn.disabled = false;
+                }, 3000);
             });
         }
 
@@ -1285,6 +1363,13 @@
                 if (value.trim()) data[key] = value;
             });
 
+            const btn = form.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            
+            // Mostrar estado de carga
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            btn.disabled = true;
+
             fetch('/api/categorias', {
                 method: 'POST',
                 headers: {
@@ -1296,17 +1381,51 @@
             .then(response => response.json())
             .then(result => {
                 if (result.categoria || result.id) {
-                    alert('Categoría creada exitosamente');
-                    form.reset();
-                    cargarTablaCategorias();
-                    cargarCategorias(); // Actualizar cache
+                    // Mostrar éxito
+                    btn.innerHTML = '<i class="fas fa-check"></i> ¡Guardado!';
+                    btn.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+                    
+                    setTimeout(() => {
+                        form.reset();
+                        cargarTablaCategorias();
+                        cargarCategorias(); // Actualizar cache
+                        
+                        // Restaurar botón y cerrar modal
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                        btn.disabled = false;
+                        closeModal('categoria');
+                    }, 1500);
                 } else {
-                    alert('Error al crear categoría: ' + (result.message || 'Error desconocido'));
+                    // Mostrar error
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                    btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    
+                    // Mostrar mensaje de error en el formulario
+                    showFormError('formCategoria', result.message || 'Error al crear categoría');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                        btn.disabled = false;
+                    }, 3000);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al crear categoría');
+                
+                // Mostrar error
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                
+                // Mostrar mensaje de error en el formulario
+                showFormError('formCategoria', 'Error de conexión al servidor');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    btn.disabled = false;
+                }, 3000);
             });
         }
 
@@ -1329,6 +1448,62 @@
             if (confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
                 alert('Función de eliminar categoría en desarrollo. ID: ' + id);
             }
+        }
+
+        // Función auxiliar para mostrar errores en formularios
+        function showFormError(formId, message) {
+            const form = document.getElementById(formId);
+            
+            // Remover mensaje de error anterior si existe
+            const existingError = form.querySelector('.form-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Crear nuevo mensaje de error
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'form-error';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>${message}</span>
+            `;
+            
+            // Insertar al inicio del formulario
+            form.insertBefore(errorDiv, form.firstChild);
+            
+            // Remover después de 5 segundos
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Función auxiliar para mostrar éxito en formularios
+        function showFormSuccess(formId, message) {
+            const form = document.getElementById(formId);
+            
+            // Remover mensajes anteriores si existen
+            const existingMessages = form.querySelectorAll('.form-error, .form-success');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Crear nuevo mensaje de éxito
+            const successDiv = document.createElement('div');
+            successDiv.className = 'form-success';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            // Insertar al inicio del formulario
+            form.insertBefore(successDiv, form.firstChild);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.remove();
+                }
+            }, 3000);
         }
     </script>
 </body>
