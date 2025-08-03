@@ -9,13 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('productos', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+public function up()
+{
+    Schema::create('productos', function (Blueprint $table) {
+        $table->id();
+        $table->string('nombre');
+        $table->text('descripcion');
+        $table->decimal('precio', 10, 2);
+        $table->integer('stock')->default(0);
+        $table->unsignedBigInteger('marca_id');
+        $table->unsignedBigInteger('categoria_id');
+        $table->string('imagen_url')->nullable();
+        $table->timestamps();
+
+        // Agrega las claves foráneas después con una migración separada
+    });
+}
+
+
 
     /**
      * Reverse the migrations.

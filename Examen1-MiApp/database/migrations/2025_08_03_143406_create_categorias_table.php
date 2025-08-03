@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique();
-            $table->string('slug')->unique(); // Para URLs amigables
             $table->text('descripcion')->nullable();
-            $table->string('imagen')->nullable(); // Para almacenar imagen de la categoría
-            $table->boolean('activo')->default(true); // Para habilitar/deshabilitar categorías
             $table->timestamps();
         });
     }

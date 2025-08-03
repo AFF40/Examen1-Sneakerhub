@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     //
     public function login(Request $request)
-    {
+{
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
@@ -32,16 +32,16 @@ class AuthController extends Controller
     return response()->json([
         'access_token' => $token,
         'token_type' => 'Bearer',
+        'redirect_to' => '/dashboard', // Añade esta línea clave
         'user' => [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            // Opcional: 'email_verified_at' => $user->email_verified_at,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at
         ]
     ]);
-    }
+}
 public function register(Request $request)
 {
     $validated = $request->validate([
@@ -61,5 +61,14 @@ public function register(Request $request)
         'token_type' => 'Bearer',
         'user' => $user
     ], 201);
+}
+
+public function logout(Request $request)
+{
+    $request->user()->currentAccessToken()->delete();
+    
+    return response()->json([
+        'message' => 'Sesión cerrada exitosamente'
+    ]);
 }
 }

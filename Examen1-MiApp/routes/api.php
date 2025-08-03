@@ -30,3 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Productos por marca
     Route::get('marcas/{marca}/productos', [MarcaController::class, 'productosPorMarca']);
 });
+
+Route::middleware('auth:sanctum')->get('/dashboard', function () {
+    return view('dashboard'); // Or return JSON data
+});
