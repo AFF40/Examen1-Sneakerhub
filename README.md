@@ -31,6 +31,10 @@ Un sistema completo de gestión de inventario de sneakers desarrollado en Larave
 
 ## 🚀 Instalación
 
+## Documentacion y Evidencias
+
+- https://aff40.github.io/Examen1-Sneakerhub/evidencias.html
+
 ### 1. Clonar el repositorio
 ```bash
 git clone https://github.com/AFF40/examen-1.git
