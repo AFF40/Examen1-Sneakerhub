@@ -1994,9 +1994,162 @@
         }
 
         function eliminarCategoria(id) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
-                alert('Función de eliminar categoría en desarrollo. ID: ' + id);
+            // Buscar la categoría por ID
+            const categoria = categorias.find(c => c.id === id);
+            if (!categoria) {
+                alert('Error: Categoría no encontrada');
+                return;
             }
+
+            // Actualizar el nombre de la categoría en el modal
+            document.getElementById('categoriaNameToDelete').textContent = categoria.nombre;
+            
+            // Cargar productos asociados
+            cargarProductosAsociadosCategoria(id);
+            
+            // Mostrar el modal de confirmación
+            document.getElementById('confirmCategoriaModal').style.display = 'block';
+            
+            // Guardar el ID de la categoría a eliminar
+            window.categoriaToDelete = id;
+        }
+
+        function cargarProductosAsociadosCategoria(categoriaId) {
+            const token = localStorage.getItem('auth_token');
+            const productosDiv = document.getElementById('productosAsociadosCategoria');
+            
+            productosDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Cargando productos asociados...</p>';
+            
+            fetch(`/api/categorias/${categoriaId}/productos`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(productos => {
+                if (productos.length > 0) {
+                    let html = `
+                        <div class="warning-text">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            ¡ATENCIÓN! Esta categoría tiene ${productos.length} producto(s) asociado(s):
+                        </div>
+                        <div class="productos-list">
+                    `;
+                    
+                    productos.forEach(producto => {
+                        html += `
+                            <div class="producto-item">
+                                <img src="${producto.imagen_url || '/images/no-image.png'}" alt="${producto.nombre}">
+                                <div class="producto-info">
+                                    <div class="producto-nombre">${producto.nombre}</div>
+                                    <div class="producto-precio">$${producto.precio}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                        </div>
+                        <div class="warning-text" style="margin-top: 15px;">
+                            <i class="fas fa-trash"></i> 
+                            ¡CUIDADO! Al eliminar esta categoría, también se eliminarán TODOS estos productos de forma permanente.
+                        </div>
+                    `;
+                    
+                    productosDiv.innerHTML = html;
+                    
+                    // Cambiar el texto del botón de confirmación para ser más claro
+                    const btnConfirm = document.getElementById('btnConfirmCategoria');
+                    btnConfirm.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Eliminar categoría y ${productos.length} producto(s)`;
+                    btnConfirm.disabled = false;
+                    btnConfirm.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    btnConfirm.style.cursor = 'pointer';
+                } else {
+                    productosDiv.innerHTML = `
+                        <div style="color: #27ae60; text-align: center;">
+                            <i class="fas fa-check-circle"></i> 
+                            Esta categoría no tiene productos asociados. Se puede eliminar sin problemas.
+                        </div>
+                    `;
+                    
+                    // Restaurar el texto original del botón
+                    document.getElementById('btnConfirmCategoria').innerHTML = 
+                        `<i class="fas fa-trash"></i> Eliminar`;
+                }
+            })
+            .catch(error => {
+                console.error('Error cargando productos:', error);
+                productosDiv.innerHTML = `
+                    <div class="warning-text">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Error al cargar productos asociados. La categoría podría tener productos asociados.
+                    </div>
+                `;
+            });
+        }
+
+        function closeConfirmCategoriaModal() {
+            document.getElementById('confirmCategoriaModal').style.display = 'none';
+            window.categoriaToDelete = null;
+        }
+
+        function confirmarEliminacionCategoria() {
+            if (!window.categoriaToDelete) return;
+            
+            const btn = document.getElementById('btnConfirmCategoria');
+            if (btn.disabled) return; // No permitir eliminación si está deshabilitado
+            
+            const token = localStorage.getItem('auth_token');
+            const originalHTML = btn.innerHTML;
+            const originalBackground = btn.style.background;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            btn.disabled = true;
+            
+            fetch(`/api/categorias/${window.categoriaToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Cerrar modal
+                closeConfirmCategoriaModal();
+                
+                // Mostrar mensaje de éxito detallado
+                let mensaje = 'Categoría eliminada exitosamente';
+                if (data.productos_eliminados && data.productos_eliminados > 0) {
+                    mensaje += `\nTambién se eliminaron ${data.productos_eliminados} producto(s) asociado(s)`;
+                }
+                alert(mensaje);
+                
+                // Recargar tabla de categorías y productos
+                cargarTablaCategorias();
+                cargarCategorias();
+                cargarCategoriasSelect();
+                cargarProductos(); // También recargar productos ya que algunos pueden haber sido eliminados
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Mostrar error específico
+                let errorMessage = error.message;
+                
+                alert('Error al eliminar categoría: ' + errorMessage);
+            })
+            .finally(() => {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                btn.style.background = originalBackground;
+            });
         }
 
         // Función auxiliar para mostrar errores en formularios

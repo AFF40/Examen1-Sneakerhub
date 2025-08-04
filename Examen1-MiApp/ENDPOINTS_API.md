@@ -206,8 +206,8 @@ Authorization: Bearer {{token}}
 **Nota importante:** Al eliminar una marca, también se eliminan automáticamente todos sus productos asociados (eliminación en cascada).
 
 ### 9. PRODUCTOS POR MARCA
-```http
-GET {{BASE_URL}}/api/marcas/1/productos
+```
+GET /api/marcas/1/productos
 Authorization: Bearer {{token}}
 ```
 
@@ -232,8 +232,8 @@ Authorization: Bearer {{token}}
 ## 📁 CATEGORÍAS
 
 ### 10. LISTAR TODAS LAS CATEGORÍAS
-```http
-GET {{BASE_URL}}/api/categorias
+```
+GET /api/categorias
 Authorization: Bearer {{token}}
 ```
 
@@ -258,8 +258,8 @@ Authorization: Bearer {{token}}
 ```
 
 ### 11. CREAR NUEVA CATEGORÍA
-```http
-POST {{BASE_URL}}/api/categorias
+```
+POST /api/categorias
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -284,8 +284,8 @@ Content-Type: application/json
 ```
 
 ### 12. ACTUALIZAR CATEGORÍA
-```http
-PUT {{BASE_URL}}/api/categorias/1
+```
+PUT /api/categorias/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -310,18 +310,53 @@ Content-Type: application/json
 ```
 
 ### 13. ELIMINAR CATEGORÍA
-```http
-DELETE {{BASE_URL}}/api/categorias/1
+```
+DELETE /api/categorias/1
 Authorization: Bearer {{token}}
 ```
 
-**Respuesta (204):** Sin contenido
+**Respuesta (200):**
+```json
+{
+    "message": "Categoría eliminada exitosamente",
+    "productos_eliminados": 2
+}
+```
+
+**Nota importante:** Al eliminar una categoría, también se eliminan automáticamente todos sus productos asociados (eliminación en cascada).
+
+### 14. PRODUCTOS POR CATEGORÍA
+```
+GET /api/categorias/1/productos
+Authorization: Bearer {{token}}
+```
+
+**Respuesta (200):**
+```json
+[
+    {
+        "id": 1,
+        "nombre": "Air Max 90",
+        "descripcion": "Sneakers clásicos",
+        "precio": "129.99",
+        "stock": 50,
+        "marca_id": 1,
+        "categoria_id": 1,
+        "imagen_url": "https://ejemplo.com/imagen.jpg",
+        "marca": {
+            "id": 1,
+            "nombre": "Nike",
+            "pais_origen": "Estados Unidos"
+        }
+    }
+]
+```
 
 ---
 
 ## 👟 PRODUCTOS
 
-### 14. LISTAR TODOS LOS PRODUCTOS
+### 15. LISTAR TODOS LOS PRODUCTOS
 ```http
 GET {{BASE_URL}}/api/productos
 Authorization: Bearer {{token}}
@@ -355,7 +390,7 @@ Authorization: Bearer {{token}}
 ]
 ```
 
-### 15. CREAR NUEVO PRODUCTO
+### 16. CREAR NUEVO PRODUCTO
 ```http
 POST {{BASE_URL}}/api/productos
 Authorization: Bearer {{token}}
@@ -398,7 +433,7 @@ Content-Type: application/json
 }
 ```
 
-### 16. OBTENER PRODUCTO ESPECÍFICO
+### 17. OBTENER PRODUCTO ESPECÍFICO
 ```http
 GET {{BASE_URL}}/api/productos/1
 Authorization: Bearer {{token}}
@@ -430,7 +465,7 @@ Authorization: Bearer {{token}}
 }
 ```
 
-### 17. ACTUALIZAR PRODUCTO
+### 18. ACTUALIZAR PRODUCTO
 ```http
 PUT {{BASE_URL}}/api/productos/1
 Authorization: Bearer {{token}}
@@ -459,7 +494,7 @@ Content-Type: application/json
 }
 ```
 
-### 18. ELIMINAR PRODUCTO
+### 19. ELIMINAR PRODUCTO
 ```http
 DELETE {{BASE_URL}}/api/productos/1
 Authorization: Bearer {{token}}
@@ -467,7 +502,7 @@ Authorization: Bearer {{token}}
 
 **Respuesta (204):** Sin contenido
 
-### 19. BUSCAR PRODUCTOS
+### 20. BUSCAR PRODUCTOS
 ```http
 GET {{BASE_URL}}/api/productos/buscar?nombre=Air&precio_min=100&precio_max=200
 Authorization: Bearer {{token}}
@@ -503,7 +538,7 @@ Authorization: Bearer {{token}}
 
 ## 📊 DASHBOARD
 
-### 20. DASHBOARD
+### 21. DASHBOARD
 ```http
 GET {{BASE_URL}}/api/dashboard
 Authorization: Bearer {{token}}
@@ -555,15 +590,7 @@ Authorization: Bearer {{token}}
 }
 ```
 
-### Error de Restricción de Integridad para Categorías (422):
-```json
-{
-    "error": "No se puede eliminar la categoría porque tiene productos asociados", 
-    "message": "Elimine primero todos los productos de esta categoría antes de eliminarla"
-}
-```
-
-**Nota:** Las marcas se pueden eliminar libremente ya que sus productos se eliminan automáticamente en cascada.
+**Nota:** Tanto las marcas como las categorías se pueden eliminar libremente ya que sus productos se eliminan automáticamente en cascada.
 
 ---
 
