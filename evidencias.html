@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SneakerHub - Acceso a Documentación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .doc-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            margin: 1rem;
+        }
+
+        .doc-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+        }
+
+        .readme-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            margin: 0.5rem;
+        }
+
+        .readme-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+            background: linear-gradient(45deg, #1976D2, #2196F3);
+        }
+
+        .api-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+            margin: 0.5rem;
+        }
+
+        .api-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+            background: linear-gradient(45deg, #F57C00, #FF9800);
+        }
+
+        .repo-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #9C27B0, #7B1FA2);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+            margin: 0.5rem;
+        }
+
+        .repo-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.6);
+            background: linear-gradient(45deg, #7B1FA2, #9C27B0);
+        }
+
+        .info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">👟</div>
+        <h1>SneakerHub</h1>
+        <p class="subtitle">Acceso directo a toda la documentación</p>
+        
+        <div>
+            <a href="https://docs.google.com/document/d/1Z7vpIt3YJMbQF9oliha4pyFi79GMuwFqV4ZNbm2BI5M/edit?usp=sharing" 
+               target="_blank" 
+               class="doc-link">
+                📄 Ver Documentación en Google Docs
+            </a>
+            
+            <a href="https://github.com/AFF40/examen-1/blob/main/README.md" 
+               target="_blank"
+               class="readme-link">
+                📋 Ver README en GitHub
+            </a>
+            
+            <a href="https://github.com/AFF40/examen-1/blob/main/Examen1-MiApp/ENDPOINTS_API.md" 
+               target="_blank"
+               class="api-link">
+                🔗 Ver API Endpoints
+            </a>
+            
+            <a href="https://github.com/AFF40/examen-1" 
+               target="_blank"
+               class="repo-link">
+                💻 Ver Repositorio Completo
+            </a>
+        </div>
+
+        <div class="info">
+            <strong>📚 Documentación Disponible Online:</strong><br>
+            • <strong>Google Docs:</strong> Documentación detallada del proyecto y evidencias<br>
+            • <strong>README GitHub:</strong> Guía completa de instalación y configuración<br>
+            • <strong>API Endpoints:</strong> Documentación de los 21 endpoints REST<br>
+            • <strong>Repositorio:</strong> Código fuente completo y estructura del proyecto<br><br>
+            <em>✨ ¡Todo accesible sin necesidad de clonar el repositorio!</em>
+        </div>
+
+        <div class="footer">
+            <p>🚀 Desarrollado con Laravel 11 & Sanctum</p>
+            <p>💻 Por AFF40</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirección opcional (descomentear si quieres redirección automática)
+        // setTimeout(() => {
+        //     window.open('https://docs.google.com/document/d/1Z7vpIt3YJMbQF9oliha4pyFi79GMuwFqV4ZNbm2BI5M/edit?usp=sharing', '_blank');
+        // }, 2000);
+    </script>
+</body>
+</html>
