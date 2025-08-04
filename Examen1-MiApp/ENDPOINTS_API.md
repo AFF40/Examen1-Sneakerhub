@@ -357,8 +357,8 @@ Authorization: Bearer {{token}}
 ## 👟 PRODUCTOS
 
 ### 15. LISTAR TODOS LOS PRODUCTOS
-```http
-GET {{BASE_URL}}/api/productos
+```
+GET /api/productos
 Authorization: Bearer {{token}}
 ```
 
@@ -391,8 +391,8 @@ Authorization: Bearer {{token}}
 ```
 
 ### 16. CREAR NUEVO PRODUCTO
-```http
-POST {{BASE_URL}}/api/productos
+```
+POST /api/productos
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -434,8 +434,8 @@ Content-Type: application/json
 ```
 
 ### 17. OBTENER PRODUCTO ESPECÍFICO
-```http
-GET {{BASE_URL}}/api/productos/1
+```
+GET /api/productos/1
 Authorization: Bearer {{token}}
 ```
 
@@ -466,8 +466,8 @@ Authorization: Bearer {{token}}
 ```
 
 ### 18. ACTUALIZAR PRODUCTO
-```http
-PUT {{BASE_URL}}/api/productos/1
+```
+PUT /api/productos/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -495,16 +495,21 @@ Content-Type: application/json
 ```
 
 ### 19. ELIMINAR PRODUCTO
-```http
-DELETE {{BASE_URL}}/api/productos/1
+```
+DELETE /api/productos/1
 Authorization: Bearer {{token}}
 ```
 
-**Respuesta (204):** Sin contenido
+**Respuesta (200):**
+```json
+{
+    "message": "Producto 'Air Max 90' eliminado exitosamente"
+}
+```
 
 ### 20. BUSCAR PRODUCTOS
-```http
-GET {{BASE_URL}}/api/productos/buscar?nombre=Air&precio_min=100&precio_max=200
+```
+GET /api/productos/buscar?nombre=Balenciaga_vagabundo
 Authorization: Bearer {{token}}
 ```
 
@@ -517,32 +522,34 @@ Authorization: Bearer {{token}}
 ```json
 [
     {
-        "id": 1,
-        "nombre": "Air Max 90",
-        "descripcion": "Sneakers clásicos con amortiguación Air",
-        "precio": "129.99",
-        "stock": 50,
+        "id": 13,
+        "nombre": "Balenciaga vagabundo",
+        "descripcion": "Tenis encontrados en el basurero",
+        "precio": "1000.00",
+        "stock": 10000,
+        "marca_id": 15,
+        "categoria_id": 4,
+        "imagen_url": "https://media.gq-magazin.de/photos/627a65716f2c1a98b47dc249/master/w_1600%2Cc_limit/Mode-BalenciagaParis-EMbed22.jpg",
+        "created_at": "2025-08-03T23:25:29.000000Z",
+        "updated_at": "2025-08-03T23:25:29.000000Z",
         "marca": {
-            "id": 1,
-            "nombre": "Nike"
+            "id": 15,
+            "nombre": "balenciaga",
+            "pais_origen": "Italia",
+            "created_at": "2025-08-03T23:24:11.000000Z",
+            "updated_at": "2025-08-03T23:24:11.000000Z"
         },
         "categoria": {
-            "id": 1,
-            "nombre": "Deportivos"
+            "id": 4,
+            "nombre": "Casual",
+            "descripcion": "Zapatos para uso diario",
+            "created_at": "2025-08-03T20:27:22.000000Z",
+            "updated_at": "2025-08-03T20:27:22.000000Z"
         }
     }
 ]
 ```
 
----
-
-## 📊 DASHBOARD
-
-### 21. DASHBOARD
-```http
-GET {{BASE_URL}}/api/dashboard
-Authorization: Bearer {{token}}
-```
 
 ---
 
@@ -615,17 +622,6 @@ En requests protegidas:
 - Token: `{{token}}`
 
 ---
-
-## 📝 NOTAS IMPORTANTES
-
-1. **Reemplaza `{{BASE_URL}}`** con tu URL local: `http://localhost:8000`
-2. **Reemplaza `{{token}}`** con el token obtenido del login
-3. **Todos los IDs** en las URLs deben ser números reales de tu base de datos
-4. **Los campos opcionales** pueden omitirse en las requests
-5. **Las URLs con parámetros** como `{id}` deben reemplazarse con valores reales
-
----
-
 ## 🎯 FLUJO RECOMENDADO PARA TESTING
 
 1. **Registro** → Obtener token

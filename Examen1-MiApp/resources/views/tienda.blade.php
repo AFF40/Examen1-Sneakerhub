@@ -650,6 +650,79 @@
             border-left: 4px solid #e74c3c;
         }
 
+        /* Notificaciones toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            padding: 16px;
+            min-width: 300px;
+            max-width: 400px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            border-left: 4px solid #27ae60;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left-color: #27ae60;
+        }
+
+        .toast.error {
+            border-left-color: #e74c3c;
+        }
+
+        .toast.warning {
+            border-left-color: #f39c12;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .toast.success .toast-icon {
+            color: #27ae60;
+        }
+
+        .toast.error .toast-icon {
+            color: #e74c3c;
+        }
+
+        .toast.warning .toast-icon {
+            color: #f39c12;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .toast-message {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -1160,6 +1233,9 @@
         <p>&copy; 2025 SneakerHub. Todos los derechos reservados. | Diseñado con <i class="fas fa-heart" style="color: #e74c3c;"></i></p>
     </footer>
 
+    <!-- Container para notificaciones toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <!-- Modal de Confirmación de Eliminación -->
     <div id="confirmModal" class="confirm-modal">
         <div class="confirm-modal-content">
@@ -1506,12 +1582,12 @@
                         cargarProductos(); // Recargar productos
                     }, 1500);
                 } else {
-                    alert('Error al crear producto: ' + (result.message || JSON.stringify(result)));
+                    showToast('Error al crear producto: ' + (result.message || JSON.stringify(result)), 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al crear producto: ' + error.message);
+                showToast('Error al crear producto: ' + error.message, 'error');
             });
         }
 
@@ -1548,7 +1624,7 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Nombre</th>
                                 <th>País de Origen</th>
                                 <th>Acciones</th>
@@ -1558,10 +1634,10 @@
                 `;
                 
                 if (marcas.length > 0) {
-                    marcas.forEach(marca => {
+                    marcas.forEach((marca, index) => {
                         html += `
                             <tr>
-                                <td>${marca.id}</td>
+                                <td>${index + 1}</td>
                                 <td>${marca.nombre}</td>
                                 <td>${marca.pais_origen || 'No especificado'}</td>
                                 <td class="action-btns">
@@ -1694,7 +1770,7 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Acciones</th>
@@ -1704,10 +1780,10 @@
                 `;
                 
                 if (categorias.length > 0) {
-                    categorias.forEach(categoria => {
+                    categorias.forEach((categoria, index) => {
                         html += `
                             <tr>
-                                <td>${categoria.id}</td>
+                                <td>${index + 1}</td>
                                 <td>${categoria.nombre}</td>
                                 <td>${categoria.descripcion || 'Sin descripción'}</td>
                                 <td class="action-btns">
@@ -1827,7 +1903,7 @@
             // Buscar la marca por ID
             const marca = marcas.find(m => m.id === id);
             if (!marca) {
-                alert('Error: Marca no encontrada');
+                showToast('Error: Marca no encontrada', 'error');
                 return;
             }
 
@@ -1964,9 +2040,9 @@
                 // Mostrar mensaje de éxito detallado
                 let mensaje = 'Marca eliminada exitosamente';
                 if (data.productos_eliminados && data.productos_eliminados > 0) {
-                    mensaje += `\nTambién se eliminaron ${data.productos_eliminados} producto(s) asociado(s)`;
+                    mensaje += `<br><small>También se eliminaron ${data.productos_eliminados} producto(s) asociado(s)</small>`;
                 }
-                alert(mensaje);
+                showToast(mensaje, 'success', 'Marca Eliminada');
                 
                 // Recargar tabla de marcas y productos
                 cargarTablaMarcas();
@@ -1980,7 +2056,7 @@
                 // Mostrar error específico
                 let errorMessage = error.message;
                 
-                alert('Error al eliminar marca: ' + errorMessage);
+                showToast(`Error al eliminar marca: ${errorMessage}`, 'error');
             })
             .finally(() => {
                 btn.innerHTML = originalHTML;
@@ -1990,14 +2066,14 @@
         }
 
         function editarCategoria(id) {
-            alert('Función de editar categoría en desarrollo. ID: ' + id);
+            showToast('Función de editar categoría en desarrollo', 'warning');
         }
 
         function eliminarCategoria(id) {
             // Buscar la categoría por ID
             const categoria = categorias.find(c => c.id === id);
             if (!categoria) {
-                alert('Error: Categoría no encontrada');
+                showToast('Error: Categoría no encontrada', 'error');
                 return;
             }
 
@@ -2127,9 +2203,9 @@
                 // Mostrar mensaje de éxito detallado
                 let mensaje = 'Categoría eliminada exitosamente';
                 if (data.productos_eliminados && data.productos_eliminados > 0) {
-                    mensaje += `\nTambién se eliminaron ${data.productos_eliminados} producto(s) asociado(s)`;
+                    mensaje += `<br><small>También se eliminaron ${data.productos_eliminados} producto(s) asociado(s)</small>`;
                 }
-                alert(mensaje);
+                showToast(mensaje, 'success', 'Categoría Eliminada');
                 
                 // Recargar tabla de categorías y productos
                 cargarTablaCategorias();
@@ -2143,7 +2219,7 @@
                 // Mostrar error específico
                 let errorMessage = error.message;
                 
-                alert('Error al eliminar categoría: ' + errorMessage);
+                showToast(`Error al eliminar categoría: ${errorMessage}`, 'error');
             })
             .finally(() => {
                 btn.innerHTML = originalHTML;
@@ -2384,6 +2460,57 @@
                 closeConfirmModal();
             }
         });
+
+        // Función para mostrar notificaciones toast elegantes
+        function showToast(message, type = 'success', title = null) {
+            const container = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            let toastTitle = title || '';
+            
+            switch(type) {
+                case 'success':
+                    icon = 'fas fa-check-circle';
+                    toastTitle = title || 'Éxito';
+                    break;
+                case 'error':
+                    icon = 'fas fa-exclamation-circle';
+                    toastTitle = title || 'Error';
+                    break;
+                case 'warning':
+                    icon = 'fas fa-exclamation-triangle';
+                    toastTitle = title || 'Advertencia';
+                    break;
+            }
+            
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <i class="${icon} toast-icon"></i>
+                    <div class="toast-title">${toastTitle}</div>
+                </div>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Mostrar la notificación
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            // Ocultar después de 4 segundos
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (container.contains(toast)) {
+                        container.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
     </script>
 </body>
 </html>

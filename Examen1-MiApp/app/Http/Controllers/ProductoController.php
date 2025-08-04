@@ -51,8 +51,12 @@ public function update(Request $request, Producto $producto)
 
 public function destroy(Producto $producto)
 {
+    $nombreProducto = $producto->nombre;
     $producto->delete();
-    return response()->json(null, 204);
+    
+    return response()->json([
+        'message' => "Producto '{$nombreProducto}' eliminado exitosamente"
+    ], 200);
 }
 
 // En ProductoController
