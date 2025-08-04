@@ -221,7 +221,30 @@
             box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
         }
 
-        .producto:hover .producto-delete-btn {
+        .producto-edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 55px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .producto:hover .producto-delete-btn,
+        .producto:hover .producto-edit-btn {
             opacity: 1;
             transform: scale(1);
         }
@@ -229,6 +252,11 @@
         .producto-delete-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5);
+        }
+
+        .producto-edit-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.5);
         }
 
         .producto:hover {
@@ -546,6 +574,80 @@
         .btn-cancel:hover {
             background: #545b62;
             transform: translateY(-2px);
+        }
+
+        /* Estilos específicos para modal de marcas */
+        .marca-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        #productosAsociados {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .productos-list {
+            margin-top: 10px;
+        }
+
+        .producto-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            background: white;
+            border-radius: 5px;
+            margin: 5px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .producto-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .producto-info {
+            flex: 1;
+        }
+
+        .producto-nombre {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .producto-precio {
+            color: #27ae60;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .warning-text {
+            color: #e74c3c;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Estilos específicos para modal de categorías */
+        .categoria-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        #productosAsociadosCategoria {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #e74c3c;
         }
 
         /* Modal Styles */
@@ -993,6 +1095,66 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmación de Eliminación de Marca -->
+    <div id="confirmMarcaModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Confirmar Eliminación de Marca</h3>
+            </div>
+            <div class="confirm-modal-body">
+                <p>¿Estás seguro de que quieres eliminar esta marca?</p>
+                <p class="marca-name" id="marcaNameToDelete">Nombre de la marca</p>
+                
+                <div id="productosAsociados" style="margin-top: 20px;">
+                    <!-- Aquí se cargarán los productos asociados -->
+                </div>
+                
+                <p style="color: #e74c3c; font-size: 14px; margin-top: 15px;">
+                    <i class="fas fa-warning"></i> Esta acción no se puede deshacer
+                </p>
+            </div>
+            <div class="confirm-modal-footer">
+                <button class="btn-cancel" onclick="closeConfirmMarcaModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn-confirm" id="btnConfirmMarca" onclick="confirmarEliminacionMarca()">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación de Categoría -->
+    <div id="confirmCategoriaModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Confirmar Eliminación de Categoría</h3>
+            </div>
+            <div class="confirm-modal-body">
+                <p>¿Estás seguro de que quieres eliminar esta categoría?</p>
+                <p class="categoria-name" id="categoriaNameToDelete">Nombre de la categoría</p>
+                
+                <div id="productosAsociadosCategoria" style="margin-top: 20px;">
+                    <!-- Aquí se cargarán los productos asociados -->
+                </div>
+                
+                <p style="color: #e74c3c; font-size: 14px; margin-top: 15px;">
+                    <i class="fas fa-warning"></i> Esta acción no se puede deshacer
+                </p>
+            </div>
+            <div class="confirm-modal-footer">
+                <button class="btn-cancel" onclick="closeConfirmCategoriaModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn-confirm" id="btnConfirmCategoria" onclick="confirmarEliminacionCategoria()">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 SneakerHub. Todos los derechos reservados. | Diseñado con <i class="fas fa-heart" style="color: #e74c3c;"></i></p>
@@ -1064,6 +1226,9 @@
                         
                         html += `
                             <div class="producto" style="animation-delay: ${index * 0.1}s">
+                                <button class="producto-edit-btn" onclick="mostrarEditarProducto(${producto.id}, '${producto.nombre.replace(/'/g, "\\'")}', '${producto.descripcion ? producto.descripcion.replace(/'/g, "\\'") : ''}', ${producto.precio}, ${producto.stock || 0}, ${producto.marca_id}, ${producto.categoria_id}, '${producto.imagen_url || ''}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                 <button class="producto-delete-btn" onclick="mostrarConfirmacionEliminacion(${producto.id}, '${producto.nombre.replace(/'/g, "\\'")}')">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -1190,6 +1355,17 @@
             modal.style.display = 'block';
             
             if (tipo === 'producto') {
+                // Asegurar que el modal esté en modo crear
+                const header = document.querySelector('#modalProducto .modal-header h2');
+                const saveBtn = document.querySelector('#modalProducto .btn-primary');
+                
+                header.innerHTML = '<i class="fas fa-plus"></i> Gestionar Productos';
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+                saveBtn.onclick = guardarProducto;
+                saveBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                saveBtn.disabled = false;
+                
+                productoAEditar = null;
                 cargarSelectores();
             } else if (tipo === 'categoria') {
                 cargarTablaCategorias();
@@ -1205,12 +1381,35 @@
             // Limpiar formularios
             const form = document.getElementById(`form${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
             if (form) form.reset();
+            
+            // Restaurar modal de productos a estado original si es necesario
+            if (tipo === 'producto') {
+                const header = document.querySelector('#modalProducto .modal-header h2');
+                const saveBtn = document.querySelector('#modalProducto .btn-primary');
+                
+                header.innerHTML = '<i class="fas fa-plus"></i> Gestionar Productos';
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+                saveBtn.onclick = guardarProducto;
+                saveBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                saveBtn.disabled = false;
+                
+                productoAEditar = null;
+            }
         }
 
         // Cerrar modal al hacer click fuera
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = 'none';
+            }
+            if (event.target.id === 'confirmMarcaModal') {
+                closeConfirmMarcaModal();
+            }
+            if (event.target.id === 'confirmCategoriaModal') {
+                closeConfirmCategoriaModal();
+            }
+            if (event.target.id === 'confirmModal') {
+                closeConfirmModal();
             }
         }
 
@@ -1625,24 +1824,169 @@
         }
 
         function eliminarMarca(id) {
-            // Crear confirmación elegante en lugar de confirm()
-            const btn = event.target;
+            // Buscar la marca por ID
+            const marca = marcas.find(m => m.id === id);
+            if (!marca) {
+                alert('Error: Marca no encontrada');
+                return;
+            }
+
+            // Actualizar el nombre de la marca en el modal
+            document.getElementById('marcaNameToDelete').textContent = marca.nombre;
+            
+            // Cargar productos asociados
+            cargarProductosAsociados(id);
+            
+            // Mostrar el modal de confirmación
+            document.getElementById('confirmMarcaModal').style.display = 'block';
+            
+            // Guardar el ID de la marca a eliminar
+            window.marcaToDelete = id;
+        }
+
+        function cargarProductosAsociados(marcaId) {
+            const token = localStorage.getItem('auth_token');
+            const productosDiv = document.getElementById('productosAsociados');
+            
+            productosDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Cargando productos asociados...</p>';
+            
+            fetch(`/api/marcas/${marcaId}/productos`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(productos => {
+                if (productos.length > 0) {
+                    let html = `
+                        <div class="warning-text">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            ¡ATENCIÓN! Esta marca tiene ${productos.length} producto(s) asociado(s):
+                        </div>
+                        <div class="productos-list">
+                    `;
+                    
+                    productos.forEach(producto => {
+                        html += `
+                            <div class="producto-item">
+                                <img src="${producto.imagen_url || '/images/no-image.png'}" alt="${producto.nombre}">
+                                <div class="producto-info">
+                                    <div class="producto-nombre">${producto.nombre}</div>
+                                    <div class="producto-precio">$${producto.precio}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                        </div>
+                        <div class="warning-text" style="margin-top: 15px;">
+                            <i class="fas fa-trash"></i> 
+                            ¡CUIDADO! Al eliminar esta marca, también se eliminarán TODOS estos productos de forma permanente.
+                        </div>
+                    `;
+                    
+                    productosDiv.innerHTML = html;
+                    
+                    // Cambiar el texto del botón de confirmación para ser más claro
+                    const btnConfirm = document.getElementById('btnConfirmMarca');
+                    btnConfirm.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Eliminar marca y ${productos.length} producto(s)`;
+                    btnConfirm.disabled = false;
+                    btnConfirm.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    btnConfirm.style.cursor = 'pointer';
+                } else {
+                    productosDiv.innerHTML = `
+                        <div style="color: #27ae60; text-align: center;">
+                            <i class="fas fa-check-circle"></i> 
+                            Esta marca no tiene productos asociados. Se puede eliminar sin problemas.
+                        </div>
+                    `;
+                    
+                    // Restaurar el texto original del botón
+                    document.getElementById('btnConfirmMarca').innerHTML = 
+                        `<i class="fas fa-trash"></i> Eliminar`;
+                }
+            })
+            .catch(error => {
+                console.error('Error cargando productos:', error);
+                productosDiv.innerHTML = `
+                    <div class="warning-text">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Error al cargar productos asociados. La marca podría tener productos asociados.
+                    </div>
+                `;
+            });
+        }
+
+        function closeConfirmMarcaModal() {
+            document.getElementById('confirmMarcaModal').style.display = 'none';
+            window.marcaToDelete = null;
+            
+            // Restaurar el botón a su estado original
+            const btnConfirm = document.getElementById('btnConfirmMarca');
+            btnConfirm.innerHTML = `<i class="fas fa-trash"></i> Eliminar`;
+            btnConfirm.disabled = false;
+            btnConfirm.style.background = '';
+            btnConfirm.style.cursor = '';
+        }
+
+        function confirmarEliminacionMarca() {
+            if (!window.marcaToDelete) return;
+            
+            const btn = document.getElementById('btnConfirmMarca');
+            if (btn.disabled) return; // No permitir eliminación si está deshabilitado
+            
+            const token = localStorage.getItem('auth_token');
             const originalHTML = btn.innerHTML;
-            const originalBg = btn.style.background;
+            const originalBackground = btn.style.background;
             
-            btn.innerHTML = '<i class="fas fa-question"></i>';
-            btn.style.background = 'linear-gradient(45deg, #f39c12, #e67e22)';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            btn.disabled = true;
             
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-cog fa-spin"></i>';
-                btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+            fetch(`/api/marcas/${window.marcaToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Cerrar modal
+                closeConfirmMarcaModal();
                 
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.style.background = originalBg;
-                    console.log('Función de eliminar marca en desarrollo. ID:', id);
-                }, 1500);
-            }, 1000);
+                // Mostrar mensaje de éxito detallado
+                let mensaje = 'Marca eliminada exitosamente';
+                if (data.productos_eliminados && data.productos_eliminados > 0) {
+                    mensaje += `\nTambién se eliminaron ${data.productos_eliminados} producto(s) asociado(s)`;
+                }
+                alert(mensaje);
+                
+                // Recargar tabla de marcas y productos
+                cargarTablaMarcas();
+                cargarMarcas();
+                cargarMarcasSelect();
+                cargarProductos(); // También recargar productos ya que algunos pueden haber sido eliminados
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Mostrar error específico
+                let errorMessage = error.message;
+                
+                alert('Error al eliminar marca: ' + errorMessage);
+            })
+            .finally(() => {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                btn.style.background = originalBackground;
+            });
         }
 
         function editarCategoria(id) {
@@ -1711,8 +2055,106 @@
             }, 3000);
         }
 
-        // Variables globales para eliminación
+        // Variables globales para eliminación y edición
         let productoAEliminar = null;
+        let productoAEditar = null;
+
+        // Función para mostrar modal de edición de producto
+        function mostrarEditarProducto(id, nombre, descripcion, precio, stock, marcaId, categoriaId, imagenUrl) {
+            productoAEditar = id;
+            
+            // Cargar selectores antes de llenar el formulario
+            cargarSelectores();
+            
+            // Llenar el formulario con los datos actuales
+            setTimeout(() => {
+                document.getElementById('nombreProducto').value = nombre;
+                document.getElementById('descripcionProducto').value = descripcion || '';
+                document.getElementById('precioProducto').value = precio;
+                document.getElementById('stockProducto').value = stock || 0;
+                document.getElementById('marcaProducto').value = marcaId;
+                document.getElementById('categoriaProducto').value = categoriaId;
+                document.getElementById('imagenProducto').value = imagenUrl || '';
+                
+                // Cambiar el título del modal
+                document.querySelector('#modalProducto .modal-header h2').innerHTML = '<i class="fas fa-edit"></i> Editar Producto';
+                
+                // Cambiar el texto del botón
+                const saveBtn = document.querySelector('#modalProducto .btn-primary');
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Actualizar';
+                saveBtn.onclick = actualizarProducto;
+                
+                // Mostrar el modal
+                document.getElementById('modalProducto').style.display = 'block';
+            }, 300);
+        }
+
+        // Función para actualizar producto
+        function actualizarProducto() {
+            if (!productoAEditar) return;
+            
+            const form = document.getElementById('formProducto');
+            const formData = new FormData(form);
+            const token = localStorage.getItem('auth_token');
+            
+            const data = {};
+            formData.forEach((value, key) => {
+                if (value.trim()) data[key] = value;
+            });
+
+            const btn = document.querySelector('#modalProducto .btn-primary');
+            const originalText = btn.innerHTML;
+            
+            // Mostrar estado de carga
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+            btn.disabled = true;
+
+            fetch(`/api/productos/${productoAEditar}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Mostrar éxito
+                btn.innerHTML = '<i class="fas fa-check"></i> ¡Actualizado!';
+                btn.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+                
+                setTimeout(() => {
+                    // Restaurar modal a estado original
+                    document.querySelector('#modalProducto .modal-header h2').innerHTML = '<i class="fas fa-plus"></i> Gestionar Productos';
+                    btn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+                    btn.onclick = guardarProducto;
+                    btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    btn.disabled = false;
+                    
+                    closeModal('producto');
+                    cargarProductos(); // Recargar productos
+                    productoAEditar = null;
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Mostrar error
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                btn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    btn.disabled = false;
+                }, 3000);
+            });
+        }
 
         // Función para mostrar confirmación de eliminación
         function mostrarConfirmacionEliminacion(productoId, productoNombre) {

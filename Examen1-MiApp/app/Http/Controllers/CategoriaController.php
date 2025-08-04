@@ -51,10 +51,26 @@ class CategoriaController extends Controller
 
     public function destroy(Categoria $categoria)
     {
+        // Obtener el número de productos asociados antes de eliminar
+        $productosCount = $categoria->productos()->count();
+        
+        // Eliminar todos los productos asociados primero
+        $categoria->productos()->delete();
+        
+        // Luego eliminar la categoría
         $categoria->delete();
 
         return response()->json([
-            'message' => 'Categoría eliminada exitosamente'
-        ], 204);
+            'message' => 'Categoría eliminada exitosamente',
+            'productos_eliminados' => $productosCount
+        ], 200);
+    }
+
+    public function productosPorCategoria(Categoria $categoria)
+    {
+        // Cargar productos con sus relaciones
+        $productos = $categoria->productos()->with(['marca'])->get();
+        
+        return response()->json($productos);
     }
 }

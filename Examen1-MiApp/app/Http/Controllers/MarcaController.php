@@ -51,15 +51,26 @@ class MarcaController extends Controller
 
     public function destroy(Marca $marca)
     {
+        // Obtener el número de productos asociados antes de eliminar
+        $productosCount = $marca->productos()->count();
+        
+        // Eliminar todos los productos asociados primero
+        $marca->productos()->delete();
+        
+        // Luego eliminar la marca
         $marca->delete();
 
         return response()->json([
-            'message' => 'Marca eliminada exitosamente'
-        ], 204);
+            'message' => 'Marca eliminada exitosamente',
+            'productos_eliminados' => $productosCount
+        ], 200);
     }
 
     public function productosPorMarca(Marca $marca)
     {
-        return response()->json($marca->productos);
+        // Cargar productos con sus relaciones
+        $productos = $marca->productos()->with(['categoria'])->get();
+        
+        return response()->json($productos);
     }
 }

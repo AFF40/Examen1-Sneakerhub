@@ -31,17 +31,20 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Productos
     Route::get('/productos', [ProductoController::class, 'index']);
+    Route::get('/productos/buscar', [ProductoController::class, 'buscar']); // Mover ANTES de {producto}
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::get('/productos/{producto}', [ProductoController::class, 'show']);
     Route::put('/productos/{producto}', [ProductoController::class, 'update']);
     Route::delete('/productos/{producto}', [ProductoController::class, 'destroy']);
-    Route::get('/productos/buscar', [ProductoController::class, 'buscar']);
     
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
     
     // Productos por marca
     Route::get('marcas/{marca}/productos', [MarcaController::class, 'productosPorMarca']);
+    
+    // Productos por categoría
+    Route::get('categorias/{categoria}/productos', [CategoriaController::class, 'productosPorCategoria']);
 });
 
 Route::middleware('auth:sanctum')->get('/dashboard', function () {
